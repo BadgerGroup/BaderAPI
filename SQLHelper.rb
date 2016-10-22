@@ -37,9 +37,9 @@ class SQLHelper < ActiveRecord::Migration
 		end
 	end
 	
-	def createUser(name, password)
+	def createUser(name, password, email)
 		begin
-		user = User.create!(:username => name, :password => password)
+		user = User.create!(:username => name, :password => password, :email => email) #throws exception if invalid
 		rescue ActiveRecord::RecordNotUnique => e
 			return {:error => "Username already exists"}
 		rescue ActiveRecord::RecordInvalid => ri

@@ -54,9 +54,10 @@ post '/createUser' do
   args = JSON.parse request.body.read
   username = args['username']
   password = args['password']
+  email = args['email']
 
   db = SQLHelper.new
-  response = db.createUser username, password
+  response = db.createUser username, password, email
   JSON.pretty_generate response
 
 end
