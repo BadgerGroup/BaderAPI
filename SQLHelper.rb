@@ -1,7 +1,5 @@
 require 'active_record'
-
-class User < ActiveRecord::Base
-end
+require_relative 'User'
 
 class SQLHelper < ActiveRecord::Migration
 
@@ -19,6 +17,11 @@ class SQLHelper < ActiveRecord::Migration
 
 	end
 	
+	def fatalError(exception)
+	  puts exception
+    return {:error => "A problem has occured with the API."}
+	end
+	
 	def getFirstUser
 	  user = User.find(1)
 	  user.username
@@ -34,11 +37,15 @@ class SQLHelper < ActiveRecord::Migration
 		end
 	end
 	
-	def createUser(name)
+	def createUser(name, password)
 		begin
-		user = User.create(:username => name)
+		user = User.create!(:username => name, :password => password)
 		rescue ActiveRecord::RecordNotUnique => e
 			return {:error => "Username already exists"}
+		rescue ActiveRecord::RecordInvalid => ri
+		  return {:error => ri}
+		rescue Exception => ex
+		  self.fatalError ex
 		else
 			return {:id => user.id, :username => name}
 		end
