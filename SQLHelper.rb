@@ -1,5 +1,6 @@
 require 'active_record'
 require_relative 'User'
+require_relative 'Group'
 
 class SQLHelper < ActiveRecord::Migration
 
@@ -33,7 +34,7 @@ class SQLHelper < ActiveRecord::Migration
 		rescue ActiveRecord::RecordNotFound
 		  return {:error => "User not found."}
 		else
-		  {:id => user.id, :username => user.username}
+		  {:id => user.id, :username => user.username, :email => user.email, :groups => user.groups.size}
 		end
 	end
 	
@@ -49,5 +50,19 @@ class SQLHelper < ActiveRecord::Migration
 		else
 			return {:id => user.id, :username => name}
 		end
+	end
+	
+	def createGroup(name, description)
+	  group = Group.create(:groupName => name, :groupDescription => description)
+	rescue ActiveRecord::RecordInvalid => ri
+	  return {:error => ri}
+	else
+	  return {:id => group.id}
+	end
+	
+	def addUserToGroup(userId, groupId)
+	  user = User.find(userId)
+	  user.groups<< Group.find(groupId)
+	  return {:userId => userId, :groupId => groupId}
 	end
 end
