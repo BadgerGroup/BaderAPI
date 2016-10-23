@@ -6,6 +6,12 @@ URL = "http://badgerapi.e3rxnzanmm.us-west-2.elasticbeanstalk.com/"
 
 db = SQLHelper.new
 
+post '*' do
+  request.body.rewind
+  @args = JSON.parse request.body.read
+  pass
+end
+
 get '/' do
   <<-eos
 	<h2>Badger API</h2>
@@ -43,6 +49,11 @@ get '/testConnection' do
   "Connected to Badger API!"
 end
 
+get '/testCrash' do
+  db.crash
+  "Crashed!"
+end
+
 # search for user by id, /getUser?id=4
 get '/readUser' do
   response = db.getUserById params['id']
@@ -51,35 +62,30 @@ end
 
 # password authentication to be added
 post '/createUser' do
-  request.body.rewind
-  args = JSON.parse request.body.read
-  username = args['username']
-  password = args['password']
-  email    = args['email']
+  username = @args['username']
+  password = @args['password']
+  email    = @args['email']
 
   response = db.createUser username, password, email
   JSON.pretty_generate response
 end
 
 post '/updateUser' do
-  args = JSON.parse request.body.read
-  response = db.updateUser(args)
+  response = db.updateUser(@args)
   JSON.pretty_generate response
 end
 
 post '/addUserToGroup' do
-  args = JSON.parse request.body.read
-  userId = args['userId']
-  groupId = args['groupId']
+  userId = @args['userId']
+  groupId = @args['groupId']
   
   response = db.addUserToGroup(userId, groupId)
   JSON.pretty_generate response
 end
 
 post '/createGroup' do
-  args = JSON.parse request.body.read
-  name = args['groupName']
-  desc = args['groupDescription']
+  name = @args['groupName']
+  desc = @args['groupDescription']
   
   response = db.createGroup name, desc
   JSON.pretty_generate response
@@ -89,3 +95,4 @@ get '/readGroup' do
   response = db.getGroupById params['id']
   JSON.pretty_generate response
 end
+   

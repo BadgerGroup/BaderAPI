@@ -1,4 +1,5 @@
 require 'active_record'
+
 require_relative 'User'
 require_relative 'Group'
 
@@ -6,6 +7,7 @@ class SQLHelper < ActiveRecord::Migration
 
 	SQLUsername = 'badgeradmin'
 	SQLPassword = 'AppBadger1!'
+	HARD_ERR = {:error => "There was a problem with the API."}
 	
 	def initialize
 		ActiveRecord::Base.establish_connection(
@@ -15,11 +17,13 @@ class SQLHelper < ActiveRecord::Migration
 			:password => SQLPassword,
 			:database => "BadgerDB"
 		)
-
 	end
 	
 	def fatalError(exception)
 	  puts exception
+	  File.open("log.txt", "a") do |f|
+      f.puts DateTime.now + exception.backtrace
+    end
     return {:error => "A problem has occured with the API."}
 	end
 	
@@ -33,8 +37,12 @@ class SQLHelper < ActiveRecord::Migration
 		user = User.find(id)
 		rescue ActiveRecord::RecordNotFound
 		  return {:error => "User not found."}
+		rescue Exception => e
+      self.fatalError e
+      HARD_ERR
 		else
-		  {:id => user.id, :username => user.username, :email => user.email, :groups => user.groups.size}
+		  #result = {:id => user.id, :username => user.username, :email => user.email}
+		  user.toArray
 		end
 	end
 	
@@ -43,6 +51,9 @@ class SQLHelper < ActiveRecord::Migration
     user = User.find(id)
     rescue ActiveRecord::RecordNotFound
       return {:error => "User not found."}
+    rescue Exception => e
+      self.fatalError e
+      HARD_ERR
     else
       {:id => group.id, :username => user.username, :email => user.email, :groups => user.groups.size}
     end
@@ -52,11 +63,12 @@ class SQLHelper < ActiveRecord::Migration
 		begin
 		user = User.create!(:username => name, :password => password, :email => email) #throws exception if invalid
 		rescue ActiveRecord::RecordNotUnique => e
-			return {:error => "Username already exists"}
+			return {:error => "Username or email already exists."}
 		rescue ActiveRecord::RecordInvalid => ri
 		  return {:error => ri}
 		rescue Exception => ex
 		  self.fatalError ex
+		  HARD_ERR
 		else
 			return {:id => user.id, :username => user.username, :email => user.email}
 		end
@@ -73,12 +85,18 @@ class SQLHelper < ActiveRecord::Migration
 	  end
     rescue ActiveRecord::RecordInvalid => ri
       return {:error => ri}
+    rescue Exception => e
+      self.fatalError e
+      HARD_ERR
 	end
 	
 	def createGroup(name, description)
 	  group = Group.create(:groupName => name, :groupDescription => description)
 	rescue ActiveRecord::RecordInvalid => ri
 	  return {:error => ri}
+	rescue Exception => e
+    self.fatalError e
+    HARD_ERR
 	else
 	  return {:id => group.id}
 	end
@@ -90,6 +108,9 @@ class SQLHelper < ActiveRecord::Migration
 	  return {:error => "User already member of group"}
 	rescue ActiveRecord::RecordNotFound
     return {:error => "User/group not found."}
+  rescue Exception => e
+    self.fatalError e
+    return HARD_ERR
 	else
 	  return {:userId => userId, :groupId => groupId}
 	end
