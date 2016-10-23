@@ -38,6 +38,16 @@ class SQLHelper < ActiveRecord::Migration
 		end
 	end
 	
+	 def getGroupById(id)
+    begin
+    user = User.find(id)
+    rescue ActiveRecord::RecordNotFound
+      return {:error => "User not found."}
+    else
+      {:id => group.id, :username => user.username, :email => user.email, :groups => user.groups.size}
+    end
+  end
+	
 	def createUser(name, password, email)
 		begin
 		user = User.create!(:username => name, :password => password, :email => email) #throws exception if invalid
@@ -48,8 +58,21 @@ class SQLHelper < ActiveRecord::Migration
 		rescue Exception => ex
 		  self.fatalError ex
 		else
-			return {:id => user.id, :username => name}
+			return {:id => user.id, :username => user.username, :email => user.email}
 		end
+	end
+	
+	def updateUser(args)
+	  if args['id'] then
+	    userId = args['id']
+	    user = User.find(userId)
+      user.update! args
+      return {:response => "Record updated."}
+    else
+	    return {:error => "'id' is required."}
+	  end
+    rescue ActiveRecord::RecordInvalid => ri
+      return {:error => ri}
 	end
 	
 	def createGroup(name, description)

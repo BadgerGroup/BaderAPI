@@ -4,6 +4,8 @@ require 'json'
 
 URL = "http://badgerapi.e3rxnzanmm.us-west-2.elasticbeanstalk.com/"
 
+db = SQLHelper.new
+
 get '/' do
   <<-eos
 	<h2>Badger API</h2>
@@ -43,7 +45,6 @@ end
 
 # search for user by id, /getUser?id=4
 get '/readUser' do
-  db = SQLHelper.new
   response = db.getUserById params['id']
 	JSON.pretty_generate response
 end
@@ -56,8 +57,13 @@ post '/createUser' do
   password = args['password']
   email    = args['email']
 
-  db = SQLHelper.new
   response = db.createUser username, password, email
+  JSON.pretty_generate response
+end
+
+post '/updateUser' do
+  args = JSON.parse request.body.read
+  response = db.updateUser(args)
   JSON.pretty_generate response
 end
 
@@ -66,7 +72,6 @@ post '/addUserToGroup' do
   userId = args['userId']
   groupId = args['groupId']
   
-  db = SQLHelper.new
   response = db.addUserToGroup(userId, groupId)
   JSON.pretty_generate response
 end
@@ -76,7 +81,11 @@ post '/createGroup' do
   name = args['groupName']
   desc = args['groupDescription']
   
-  db = SQLHelper.new
   response = db.createGroup name, desc
+  JSON.pretty_generate response
+end
+
+get '/readGroup' do
+  response = db.getGroupById params['id']
   JSON.pretty_generate response
 end
