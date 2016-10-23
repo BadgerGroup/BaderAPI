@@ -63,6 +63,11 @@ class SQLHelper < ActiveRecord::Migration
 	def addUserToGroup(userId, groupId)
 	  user = User.find(userId)
 	  user.groups<< Group.find(groupId)
+	rescue ActiveRecord::RecordNotUnique => rnu
+	  return {:error => "User already member of group"}
+	rescue ActiveRecord::RecordNotFound
+    return {:error => "User/group not found."}
+	else
 	  return {:userId => userId, :groupId => groupId}
 	end
 end
