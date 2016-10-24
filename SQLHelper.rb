@@ -48,14 +48,14 @@ class SQLHelper < ActiveRecord::Migration
 	
 	 def getGroupById(id)
     begin
-    user = User.find(id)
+    group = Group.find(id)
     rescue ActiveRecord::RecordNotFound
-      return {:error => "User not found."}
+      return {:error => "Group not found."}
     rescue Exception => e
       self.fatalError e
       HARD_ERR
     else
-      {:id => group.id, :username => user.username, :email => user.email, :groups => user.groups.size}
+      {:id => group.id, :groupName => group.groupName, :groupDescription => group.groupDescription}
     end
   end
 	
@@ -105,13 +105,23 @@ class SQLHelper < ActiveRecord::Migration
 	  user = User.find(userId)
 	  user.groups<< Group.find(groupId)
 	rescue ActiveRecord::RecordNotUnique => rnu
-	  return {:error => "User already member of group"}
+	  return {:error => "User already member of group."}
 	rescue ActiveRecord::RecordNotFound
     return {:error => "User/group not found."}
   rescue Exception => e
     self.fatalError e
     return HARD_ERR
 	else
-	  return {:userId => userId, :groupId => groupId}
+	  return {:response => 'User added to group.', :userId => userId, :groupId => groupId}
+	end
+	
+	def removeUserFromGroup(userId, groupId)
+	  user = User.find(userId)
+	  group = Group.find(groupId)
+	  user.groups.delete(group)
+	  rescue ActiveRecord::RecordNotFound
+      return {:error => "User/group not found."}
+    else
+	    return {:response => 'User removed from group.', :userId => userId, :groupId => groupId}
 	end
 end

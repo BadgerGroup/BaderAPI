@@ -4,4 +4,5 @@ class Group < ActiveRecord::Base
   
   validates :groupName, presence: true, length: {maximum: 45}
   validates :groupDescription, presence: true, length: {maximum: 500}
+  
 end

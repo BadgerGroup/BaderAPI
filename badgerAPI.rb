@@ -57,7 +57,7 @@ end
 # search for user by id, /getUser?id=4
 get '/readUser' do
   response = db.getUserById params['id']
-	JSON.pretty_generate response
+	JSON.generate response
 end
 
 # password authentication to be added
@@ -67,12 +67,12 @@ post '/createUser' do
   email    = @args['email']
 
   response = db.createUser username, password, email
-  JSON.pretty_generate response
+  JSON.generate response
 end
 
 post '/updateUser' do
   response = db.updateUser(@args)
-  JSON.pretty_generate response
+  JSON.generate response
 end
 
 post '/addUserToGroup' do
@@ -80,7 +80,12 @@ post '/addUserToGroup' do
   groupId = @args['groupId']
   
   response = db.addUserToGroup(userId, groupId)
-  JSON.pretty_generate response
+  JSON.generate response
+end
+
+post '/removeUserFromGroup' do
+  response = db.removeUserFromGroup(@args['userId'], @args['groupId'])
+  JSON.generate response
 end
 
 post '/createGroup' do
@@ -88,11 +93,11 @@ post '/createGroup' do
   desc = @args['groupDescription']
   
   response = db.createGroup name, desc
-  JSON.pretty_generate response
+  JSON.generate response
 end
 
 get '/readGroup' do
   response = db.getGroupById params['id']
-  JSON.pretty_generate response
+  JSON.generate response
 end
    

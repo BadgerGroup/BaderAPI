@@ -9,13 +9,8 @@ class User < ActiveRecord::Base
   
   # returns array representation of user
   def toArray
-    groups = Array.new
-    i = 0
-    self.groups.each do |g|
-      groups << g.id
-      i = i+1
-    end
-    array = {:id => self.id, :username => self.username, :email => self.email, :groups => groups}
+    groups = self.group_ids
+    array = {:id => self.id, :username => self.username, :email => self.email, :groupIDs => groups}
   end
   
 end
