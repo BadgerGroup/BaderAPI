@@ -13,36 +13,7 @@ post '*' do
 end
 
 get '/' do
-  <<-eos
-	<h2>Badger API</h2>
-	<h3>/readUser</h3>
-	<p>GET #{URL}/readUser?id=2
-	<br>
-	Returns user with id 2 in JSON
-	<br>
-	Sample Output:
-	{
-  "id": 2,
-  "username": "exampleUser1"
-  }
-	</p>
-	<h3>/createUser</h3>
-	<p>POST #{URL}/createUser
-	<br>
-	Returns user with id 4 in JSON
-	<br>
-	Sample Request Body:
-	{
-  "username": "myUser"
-  }
-	<br>
-	Sample Output:
-	{
-  "id": 16,
-  "username": "myUser"
-  }
-	</p>
-	eos
+  redirect '/index.html.erb'
 end
 
 get '/testConnection' do

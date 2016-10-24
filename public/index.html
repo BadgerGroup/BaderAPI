@@ -1,0 +1,73 @@
+<h2>Badger API</h2>
+<pre>
+<h3>/readUser</h3>
+GET /readUser?id=2
+Returns user with id 2 in JSON
+Sample Output:
+{
+"id": 2,
+"username" : "exampleUser1",
+"email" : "someone@example.com",
+"groupIds" : [1, 2, 3]
+}
+
+<h3>/createUser</h3>
+POST /createUser
+Returns user with id 4 in JSON
+Sample Request Body:
+{
+"username": "myUser"
+}
+Sample Output:
+{
+"id": 16,
+"username" : "myUser",
+"email" : "someone@example.com",
+"groupIds" : []
+}
+
+<h3>/readGroup</h3>
+GET /readGroup?id=10
+Returns group with id 10 in JSON
+Sample Output:
+{
+  "id": 10,
+  "groupName": "My Group",
+  "groupDescription": "Description",
+  "userIds": [
+    26
+  ]
+}
+
+<h3>/createGroup</h3>
+POST /createGroup
+Creates and returns group with id in JSON
+Sample Request Body:
+{
+	"groupName" : "My Group",
+	"groupDescription" : "Description"
+}
+Sample Output:
+{
+  "id": 13,
+  "groupName": "My Group",
+  "groupDescription": "Description",
+  "userIds": []
+}
+
+<h3>/addUserToGroup</h3>
+POST /addUserToGroup
+Adds given user to given group
+Sample Request Body:
+{
+	"userId" : 26,
+	"groupId" : 7
+}
+Sample Output:
+{
+  "response": "User added to group.",
+  "userId": 26,
+  "groupId": 7
+}
+
+</pre>

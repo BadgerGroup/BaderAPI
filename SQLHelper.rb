@@ -55,7 +55,7 @@ class SQLHelper < ActiveRecord::Migration
       self.fatalError e
       HARD_ERR
     else
-      {:id => group.id, :groupName => group.groupName, :groupDescription => group.groupDescription}
+      group.toArray
     end
   end
 	
@@ -70,7 +70,7 @@ class SQLHelper < ActiveRecord::Migration
 		  self.fatalError ex
 		  HARD_ERR
 		else
-			return {:id => user.id, :username => user.username, :email => user.email}
+			user.toArray
 		end
 	end
 	
@@ -98,12 +98,14 @@ class SQLHelper < ActiveRecord::Migration
     self.fatalError e
     HARD_ERR
 	else
-	  return {:id => group.id}
+	  group.toArray
 	end
 	
 	def addUserToGroup(userId, groupId)
 	  user = User.find(userId)
-	  user.groups<< Group.find(groupId)
+	  group = Group.find(groupId)
+	  user.groups << group
+	  
 	rescue ActiveRecord::RecordNotUnique => rnu
 	  return {:error => "User already member of group."}
 	rescue ActiveRecord::RecordNotFound
