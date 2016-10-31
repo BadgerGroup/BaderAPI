@@ -1,6 +1,7 @@
 class User < ActiveRecord::Base
   
   has_and_belongs_to_many :groups
+  has_many :ownedGroups, :class_name => 'Group', foreign_key: 'admin_id'
   has_many :badges, dependent: :destroy, foreign_key: 'author_id'
   has_many :receivedBadges, :class_name => 'Badge', foreign_key: 'recipient_id'
   
@@ -16,10 +17,11 @@ class User < ActiveRecord::Base
     {
       :id => self.id, 
       :username => self.username, 
-      :email => self.email, 
-      :groupIds => groups,
-      :badgeIds => badges,
-      :trophyCase => self.receivedBadge_ids
+      :email => self.email,
+      :group_ids => groups,
+      :owned_groups => self.ownedGroup_ids,
+      :badge_ids => badges,
+      :trophy_case => self.receivedBadge_ids
     }
   end
   

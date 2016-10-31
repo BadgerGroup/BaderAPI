@@ -42,9 +42,9 @@ post '/createUser' do
 end
 
 post '/createBadge' do
-  imageURL = @args['imageURL']
-  badgeDescription = @args['badgeDescription']
-  authorId = @args['authorId']
+  imageURL = @args['image_url']
+  badgeDescription = @args['badge_description']
+  authorId = @args['author_id']
   
   response = db.createBadge imageURL, badgeDescription, authorId
   JSON.generate response
@@ -61,23 +61,24 @@ post '/updateBadge' do
 end
 
 post '/addUserToGroup' do
-  userId = @args['userId']
-  groupId = @args['groupId']
+  userId = @args['user_id']
+  groupId = @args['group_id']
   
   response = db.addUserToGroup(userId, groupId)
   JSON.generate response
 end
 
 post '/removeUserFromGroup' do
-  response = db.removeUserFromGroup(@args['userId'], @args['groupId'])
+  response = db.removeUserFromGroup(@args['user_id'], @args['group_id'])
   JSON.generate response
 end
 
 post '/createGroup' do
-  name = @args['groupName']
-  desc = @args['groupDescription']
+  name = @args['group_name']
+  desc = @args['group_description']
+  admin = @args['admin_id']
   
-  response = db.createGroup name, desc
+  response = db.createGroup name, desc, admin
   JSON.generate response
 end
 

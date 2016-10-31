@@ -121,14 +121,15 @@ class SQLHelper < ActiveRecord::Migration
       HARD_ERR
   end
 	
-	def createGroup(name, description)
-	  group = Group.create(:groupName => name, :groupDescription => description)
+	def createGroup(name, description, adminId)
+	  group = Group.create(:group_name => name, :group_description => description, :admin_id => adminId)
 	rescue ActiveRecord::RecordInvalid => ri
 	  return {:error => ri}
 	rescue Exception => e
     self.fatalError e
     HARD_ERR
 	else
+	  #self.addUserToGroup(adminId, group.id)
 	  group.toArray
 	end
 	
@@ -157,7 +158,7 @@ class SQLHelper < ActiveRecord::Migration
     self.fatalError e
     return HARD_ERR
 	else
-	  return {:response => 'User added to group.', :userId => userId, :groupId => groupId}
+	  return {:response => 'User added to group.', :user_id => userId, :group_id => groupId}
 	end
 	
 	def removeUserFromGroup(userId, groupId)
@@ -167,6 +168,6 @@ class SQLHelper < ActiveRecord::Migration
 	  rescue ActiveRecord::RecordNotFound
       return {:error => "User/group not found."}
     else
-	    return {:response => 'User removed from group.', :userId => userId, :groupId => groupId}
+	    return {:response => 'User removed from group.', :user_id => userId, :group_id => groupId}
 	end
 end

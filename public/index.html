@@ -9,7 +9,8 @@ Sample Output:
 "username" : "exampleUser1",
 "email" : "someone@example.com",
 "groupIds" : [1, 2, 3],
-"badgeIds" : [4, 5, 6]
+"badgeIds" : [4, 5, 6],
+"trophyCase" : [7, 8, 9]
 }
 
 <h3>/createUser</h3>
@@ -24,8 +25,10 @@ Sample Output:
 "id": 16,
 "username" : "myUser",
 "email" : "someone@example.com",
-"groupIds" : [],
-"badgeIds" : []
+"group_ids" : [],
+"owned_groups" : [],
+"badge_ids" : [],
+"trophy_case" : []
 }
 
 <h3>/readGroup</h3>
@@ -34,9 +37,9 @@ Returns group with id 10 in JSON
 Sample Output:
 {
   "id": 10,
-  "groupName": "My Group",
-  "groupDescription": "Description",
-  "userIds": [
+  "group_name": "My Group",
+  "group_description": "Description",
+  "user_ids": [
     26
   ]
 }
@@ -52,9 +55,9 @@ Sample Request Body:
 Sample Output:
 {
   "id": 13,
-  "groupName": "My Group",
-  "groupDescription": "Description",
-  "userIds": []
+  "group_name": "My Group",
+  "group_description": "Description",
+  "user_ids": []
 }
 
 <h3>/addUserToGroup</h3>
@@ -62,14 +65,69 @@ POST /addUserToGroup
 Adds given user to given group
 Sample Request Body:
 {
-	"userId" : 26,
-	"groupId" : 7
+	"user_id" : 26,
+	"group_id" : 7
 }
 Sample Output:
 {
   "response": "User added to group.",
-  "userId": 26,
-  "groupId": 7
+  "user_id": 26,
+  "group_id": 7
 }
 
+<h3>/removeUserFromGroup</h3>
+POST /removeUserFromGroup
+Removes given user from given group
+Sample Request Body:
+{
+	"user_id" : 21,
+	"group_id" : 5
+}
+Sample Output:
+{
+  "response": "User removed from group.",
+  "user_id": 21,
+  "group_id": 5
+}
+
+<h3>/createBadge</h3>
+POST /createBadge
+Creates a badge to store in the database
+Sample request body:
+{
+	"image_url" : "https://s3-us-west-2.amazonaws.com/badge-bucket/Badge5.jpg",
+	"badge_description" : "My badge description here.",
+	"author_id" : "37"
+}
+Sample Output:
+{
+  "id": 26,
+  "author_id": 37,
+  "recipient_id": null,
+  "image_url": "https://s3-us-west-2.amazonaws.com/badge-bucket/Badge5.jpg",
+  "badge_description": "My badge description here."
+}
+
+<b>Default Badge URLS:</b>
+https://s3-us-west-2.amazonaws.com/badge-bucket/Badge1.jpg
+https://s3-us-west-2.amazonaws.com/badge-bucket/Badge2.jpg
+https://s3-us-west-2.amazonaws.com/badge-bucket/Badge3.jpg
+https://s3-us-west-2.amazonaws.com/badge-bucket/Badge4.jpg
+https://s3-us-west-2.amazonaws.com/badge-bucket/Badge5.jpg
+
+<h3>/updateBadge</h3>
+POST /updateBadge
+Updates a badge with new attributes, such as a recipient to award the badge to.
+Sample request body:
+{
+	"id" : "15",
+	"image_url" : "https://s3-us-west-2.amazonaws.com/badge-bucket/Badge2.jpg",
+	"badge_description" : "Badge with receipient.",
+	"author_id" : "37",
+	"recipient_id" : "38"
+}
+Sample Output:
+{
+  "response": "Record updated."
+}
 </pre>
