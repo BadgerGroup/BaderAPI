@@ -13,7 +13,7 @@ post '*' do
 end
 
 get '/' do
-  redirect '/index.html.erb'
+  redirect '/index.html'
 end
 
 get '/testConnection' do
