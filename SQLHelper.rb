@@ -133,9 +133,9 @@ class SQLHelper < ActiveRecord::Migration
 	  group.toArray
 	end
 	
-	def createBadge(imageURL, description, authorId)
+	def createBadge(imageURL, name, description, authorId)
 	  user = User.find(authorId)
-	  badge = Badge.create(:image_url => imageURL, :badge_description => description, :author_id => user.id)
+	  badge = Badge.create(:image_url => imageURL, :badge_name => name, :badge_description => description, :author_id => user.id)
 	rescue ActiveRecord::RecordInvalid => ri
 	  return {:error => ri}
 	rescue Exception => e

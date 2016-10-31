@@ -43,10 +43,11 @@ end
 
 post '/createBadge' do
   imageURL = @args['image_url']
+  badgeName = @args['badge_name']
   badgeDescription = @args['badge_description']
   authorId = @args['author_id']
   
-  response = db.createBadge imageURL, badgeDescription, authorId
+  response = db.createBadge imageURL, badgeName, badgeDescription, authorId
   JSON.generate response
 end
 

@@ -11,7 +11,8 @@ class Badge < ActiveRecord::Base
   # returns array representation of user
   def toArray
     {
-      :id => self.id, 
+      :id => self.id,
+      :badge_name => self.badge_name, 
       :author_id => self.author.id, 
       :recipient_id => self.recipient,
       :image_url => self.image_url, 
