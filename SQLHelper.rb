@@ -2,6 +2,7 @@ require 'active_record'
 
 require_relative 'User'
 require_relative 'Group'
+require_relative 'Badge'
 
 class SQLHelper < ActiveRecord::Migration
 
@@ -22,7 +23,8 @@ class SQLHelper < ActiveRecord::Migration
 	def fatalError(exception)
 	  puts exception
 	  File.open("log.txt", "a") do |f|
-      f.puts DateTime.now + exception.backtrace
+      f.puts exception
+      f.puts exception.backtrace
     end
     return {:error => "A problem has occured with the API."}
 	end
@@ -58,6 +60,19 @@ class SQLHelper < ActiveRecord::Migration
       group.toArray
     end
   end
+  
+  def getBadgeById(id)
+    begin
+      badge = Badge.find(id)
+    rescue ActiveRecord::RecordNotFound
+      return {:error => "Badge not found."}
+    rescue Exception => e
+      self.fatalError e
+      HARD_ERR
+    else
+      badge.toArray
+    end
+  end
 	
 	def createUser(name, password, email)
 		begin
@@ -90,6 +105,22 @@ class SQLHelper < ActiveRecord::Migration
       HARD_ERR
 	end
 	
+	def updateBadge(args)
+    if args['id'] then
+      badgeId = args['id']
+      badge = Badge.find(badgeId)
+      badge.update! args
+      return {:response => "Record updated."}
+    else
+      return {:error => "'id' is required."}
+    end
+    rescue ActiveRecord::RecordInvalid => ri
+      return {:error => ri}
+    rescue Exception => e
+      self.fatalError e
+      HARD_ERR
+  end
+	
 	def createGroup(name, description)
 	  group = Group.create(:groupName => name, :groupDescription => description)
 	rescue ActiveRecord::RecordInvalid => ri
@@ -99,6 +130,18 @@ class SQLHelper < ActiveRecord::Migration
     HARD_ERR
 	else
 	  group.toArray
+	end
+	
+	def createBadge(imageURL, description, authorId)
+	  user = User.find(authorId)
+	  badge = Badge.create(:image_url => imageURL, :badge_description => description, :author_id => user.id)
+	rescue ActiveRecord::RecordInvalid => ri
+	  return {:error => ri}
+	rescue Exception => e
+	  self.fatalError e
+	  HARD_ERR
+	else
+	  badge.toArray
 	end
 	
 	def addUserToGroup(userId, groupId)

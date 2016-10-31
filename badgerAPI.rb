@@ -41,8 +41,22 @@ post '/createUser' do
   JSON.generate response
 end
 
+post '/createBadge' do
+  imageURL = @args['imageURL']
+  badgeDescription = @args['badgeDescription']
+  authorId = @args['authorId']
+  
+  response = db.createBadge imageURL, badgeDescription, authorId
+  JSON.generate response
+end
+
 post '/updateUser' do
   response = db.updateUser(@args)
+  JSON.generate response
+end
+
+post '/updateBadge' do
+  response = db.updateBadge(@args)
   JSON.generate response
 end
 
@@ -69,6 +83,11 @@ end
 
 get '/readGroup' do
   response = db.getGroupById params['id']
+  JSON.generate response
+end
+
+get '/readBadge' do
+  response = db.getBadgeById params['id']
   JSON.generate response
 end
    
