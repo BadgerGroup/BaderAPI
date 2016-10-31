@@ -36,10 +36,11 @@ GET /readGroup?id=10
 Returns group with id 10 in JSON
 Sample Output:
 {
-  "id": 10,
-  "group_name": "My Group",
-  "group_description": "Description",
-  "user_ids": [
+  "id" : 10,
+  "admin_id" : 16,
+  "group_name" : "My Group",
+  "group_description" : "Description",
+  "user_ids" : [
     26
   ]
 }
@@ -50,11 +51,13 @@ Creates and returns group with id in JSON
 Sample Request Body:
 {
 	"groupName" : "My Group",
-	"groupDescription" : "Description"
+	"groupDescription" : "Description",
+	"admin_id" : "16"
 }
 Sample Output:
 {
   "id": 13,
+  "admin_id" : 16,
   "group_name": "My Group",
   "group_description": "Description",
   "user_ids": []
@@ -95,6 +98,7 @@ POST /createBadge
 Creates a badge to store in the database
 Sample request body:
 {
+	"badge_name" : "Cool Badge Name",
 	"image_url" : "https://s3-us-west-2.amazonaws.com/badge-bucket/Badge5.jpg",
 	"badge_description" : "My badge description here.",
 	"author_id" : "37"
@@ -102,6 +106,7 @@ Sample request body:
 Sample Output:
 {
   "id": 26,
+  "badge_name" : "Cool Badge Name",
   "author_id": 37,
   "recipient_id": null,
   "image_url": "https://s3-us-west-2.amazonaws.com/badge-bucket/Badge5.jpg",
@@ -121,8 +126,9 @@ Updates a badge with new attributes, such as a recipient to award the badge to.
 Sample request body:
 {
 	"id" : "15",
+	"badge_name" : "New Badge Name",
 	"image_url" : "https://s3-us-west-2.amazonaws.com/badge-bucket/Badge2.jpg",
-	"badge_description" : "Badge with receipient.",
+	"badge_description" : "New badge description.",
 	"author_id" : "37",
 	"recipient_id" : "38"
 }
