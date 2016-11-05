@@ -41,6 +41,12 @@ post '/createUser' do
   JSON.generate response
 end
 
+post '/deleteUser' do
+  id = @args['id'];
+  response = db.deleteUser id
+  JSON.generate response
+end
+
 post '/createBadge' do
   imageURL = @args['image_url']
   badgeName = @args['badge_name']

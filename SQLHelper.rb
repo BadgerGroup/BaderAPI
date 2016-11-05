@@ -61,6 +61,18 @@ class SQLHelper < ActiveRecord::Migration
     end
   end
   
+  def deleteUser(id) 
+    user = User.find(id)
+  rescue ActiveRecord::RecordNotFound
+    return {:error => "User not found."}
+  rescue Exception => e
+    self.fatalError e
+    HARD_ERR
+  else
+    user.destroy
+    return {:response => "User with id #{id} deleted."}
+  end
+  
   def getBadgeById(id)
     begin
       badge = Badge.find(id)
