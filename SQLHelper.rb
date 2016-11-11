@@ -7,7 +7,10 @@ require_relative 'Badge'
 class SQLHelper < ActiveRecord::Migration
 
 	SQLUsername = 'badgeradmin'
-	SQLPassword = 'AppBadger1!'
+	
+	file = File.open("DBPASSWORD.TXT", "rb")
+	SQLPassword = file.read
+	
 	HARD_ERR = {:error => "There was a problem with the API."}
 	
 	def initialize
@@ -43,7 +46,6 @@ class SQLHelper < ActiveRecord::Migration
       self.fatalError e
       HARD_ERR
 		else
-		  #result = {:id => user.id, :username => user.username, :email => user.email}
 		  user.toArray
 		end
 	end
@@ -86,9 +88,9 @@ class SQLHelper < ActiveRecord::Migration
     end
   end
 	
-	def createUser(name, password, email)
+	def createUser(name, password, passwordConfirmation, email)
 		begin
-		user = User.create!(:username => name, :password => password, :email => email) #throws exception if invalid
+		user = User.create!(:username => name, :password => password, :email => email, :password_confirmation => passwordConfirmation) #throws exception if invalid
 		rescue ActiveRecord::RecordNotUnique => e
 			return {:error => "Username or email already exists."}
 		rescue ActiveRecord::RecordInvalid => ri
@@ -141,7 +143,6 @@ class SQLHelper < ActiveRecord::Migration
     self.fatalError e
     HARD_ERR
 	else
-	  #self.addUserToGroup(adminId, group.id)
 	  group.toArray
 	end
 	

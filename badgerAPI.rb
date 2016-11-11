@@ -31,13 +31,13 @@ get '/readUser' do
 	JSON.generate response
 end
 
-# password authentication to be added
 post '/createUser' do
   username = @args['username']
   password = @args['password']
+  passwordConfirmation = @args['password_confirmation']
   email    = @args['email']
 
-  response = db.createUser username, password, email
+  response = db.createUser username, password, passwordConfirmation, email
   JSON.generate response
 end
 
