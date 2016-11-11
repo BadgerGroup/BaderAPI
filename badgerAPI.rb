@@ -6,6 +6,8 @@ URL = "http://badgerapi.e3rxnzanmm.us-west-2.elasticbeanstalk.com/"
 
 db = SQLHelper.new
 
+FileUtils.cp("public/index.html", "README.md")
+
 post '*' do
   request.body.rewind
   @args = JSON.parse request.body.read
@@ -18,11 +20,6 @@ end
 
 get '/testConnection' do
   "Connected to Badger API!"
-end
-
-get '/testCrash' do
-  db.crash
-  "Crashed!"
 end
 
 # search for user by id, /getUser?id=4

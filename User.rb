@@ -9,6 +9,7 @@ class User < ActiveRecord::Base
   validates :username, length: {minimum:3, maximum:20}
   validates :email, presence: true
   validates :email, length: {minimum:3, maximum:320}, format: {with: /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i}
+  validates :password_confirmation, presence: true
   
   # returns array representation of user
   def toArray
