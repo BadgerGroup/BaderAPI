@@ -8,6 +8,10 @@ db = SQLHelper.new
 
 FileUtils.cp("public/index.html", "README.md")
 
+before do
+  content_type 'application/json'
+end
+
 post '*' do
   request.body.rewind
   @args = JSON.parse request.body.read

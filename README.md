@@ -1,8 +1,8 @@
 <h2>Badger API</h2>
 <pre>
 <h3>/readUser</h3>
-GET /readUser?id=2
-Returns user with id 2 in JSON
+GET /readUser?id=2 <b>OR</b> /readUser?username=exampleUser1
+Returns user with id 2 (or with username "exampleUser1")
 Sample Output:
 {
 	"id": 2,
