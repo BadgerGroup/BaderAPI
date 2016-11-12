@@ -4,6 +4,7 @@ class User < ActiveRecord::Base
   has_many :ownedGroups, :class_name => 'Group', foreign_key: 'admin_id'
   has_many :badges, dependent: :destroy, foreign_key: 'author_id'
   has_many :receivedBadges, :class_name => 'Badge', foreign_key: 'recipient_id'
+  has_many :friends
   
   has_secure_password
   validates :username, length: {minimum:3, maximum:20}
@@ -22,7 +23,8 @@ class User < ActiveRecord::Base
       :group_ids => groups,
       :owned_groups => self.ownedGroup_ids,
       :badge_ids => badges,
-      :trophy_case => self.receivedBadge_ids
+      :trophy_case => self.receivedBadge_ids,
+      :friend_ids => self.friend_ids
     }
   end
   

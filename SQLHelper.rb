@@ -3,6 +3,7 @@ require 'active_record'
 require_relative 'User'
 require_relative 'Group'
 require_relative 'Badge'
+require_relative 'Friend'
 
 class SQLHelper < ActiveRecord::Migration
 
@@ -46,6 +47,7 @@ class SQLHelper < ActiveRecord::Migration
       self.fatalError e
       HARD_ERR
 		else
+		  puts user.inspect
 		  user.toArray
 		end
 	end
@@ -113,6 +115,17 @@ class SQLHelper < ActiveRecord::Migration
 			user.toArray
 		end
 	end
+	
+  def addFriend(userId, friendId)
+    user = User.find(userId)
+    User.find(friendId)
+    Friend.create(:user_id => userId, :friend_id => friendId)
+    Friend.create(:user_id => friendId, :friend_id => userId)
+    return {:response => "Success"}
+    
+    rescue ActiveRecord::RecordNotFound
+      return {:error => "User and/or friend not found."}
+  end	
 	
 	def updateUser(args)
 	  if args['id'] then

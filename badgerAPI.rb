@@ -52,6 +52,13 @@ post '/deleteUser' do
   JSON.generate response
 end
 
+post '/addFriend' do
+  userId = @args['user_id']
+  friendId = @args['friend_id']
+  response = db.addFriend userId, friendId
+  JSON.generate response
+end
+
 post '/createBadge' do
   imageURL = @args['image_url']
   badgeName = @args['badge_name']
