@@ -24,7 +24,11 @@ end
 
 # search for user by id, /getUser?id=4
 get '/readUser' do
-  response = db.getUserById params['id']
+  if params['id'].nil?
+    response = db.getUserByUsername params['username']
+  else
+    response = db.getUserById params['id']
+  end
 	JSON.generate response
 end
 

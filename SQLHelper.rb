@@ -50,6 +50,17 @@ class SQLHelper < ActiveRecord::Migration
 		end
 	end
 	
+	def getUserByUsername(name)
+	  begin
+	    user = User.find_by username: name
+	    if user.nil?
+	      return {:error => "User not found."}
+	    else
+	      user.toArray
+	    end 
+	  end
+	end
+	
 	 def getGroupById(id)
     begin
     group = Group.find(id)
