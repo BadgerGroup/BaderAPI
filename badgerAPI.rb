@@ -36,6 +36,14 @@ get '/readUser' do
 	JSON.generate response
 end
 
+post '/login' do
+  username = @args['username']
+  password = @args['password']
+  
+  response = db.login username, password
+  JSON.generate response
+end
+
 post '/createUser' do
   username = @args['username']
   password = @args['password']

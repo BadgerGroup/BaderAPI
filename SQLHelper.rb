@@ -9,8 +9,9 @@ class SQLHelper < ActiveRecord::Migration
 
 	SQLUsername = 'badgeradmin'
 	
-	file = File.open("DBPASSWORD.TXT", "rb")
-	SQLPassword = file.read
+	#file = File.open("DBPASSWORD.TXT", "rb")
+	#SQLPassword = file.read
+	SQLPassword = 'AppBadger1!'
 	
 	HARD_ERR = {:error => "There was a problem with the API."}
 	
@@ -60,6 +61,19 @@ class SQLHelper < ActiveRecord::Migration
 	    else
 	      user.toArray
 	    end 
+	  end
+	end
+	
+	def login(name, password)
+	  user = User.find_by username: name
+	  if user.nil?
+	    return {:error => "No records exist for that username."}
+	  else
+	    if user.authenticate password
+	      return user.toArray
+	    else
+	      return {:error => "Incorrect password."}
+	    end
 	  end
 	end
 	

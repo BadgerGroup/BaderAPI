@@ -37,8 +37,7 @@ Sample Output:
 <h3>/addFriend</h3>
 POST /addFriend
 Adds the friend with id friend_id to the user's list of friend_ids.
-<b>This automatically adds the friend in the reverse direction - user with id friend_id
-	will have user_id in their list of friend_ids.</b>
+<b>This automatically adds the friend in the reverse direction - user with id friend_id will have user_id in their list of friend_ids as well.</b>
 Sample Request Body:
 {
 	"user_id" : "42"
