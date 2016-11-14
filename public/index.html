@@ -34,6 +34,26 @@ Sample Output:
 	"trophy_case" : []
 }
 
+<h3>/login</h3>
+POST /login
+Authenticates the given credentials, returns the User object if successful
+Sample Request Body:
+{
+	"username" : "exampleUsername",
+	"password" : "38iuajch4"
+}
+Sample Output:
+{
+  	"id": 81,
+  	"username": "exampleUsername,
+  	"email": "test@test.com",
+  	"group_ids": [],
+  	"owned_groups": [],
+  	"badge_ids": [],
+  	"trophy_case": [],
+  	"friend_ids": []
+}
+
 <h3>/addFriend</h3>
 POST /addFriend
 Adds the friend with id friend_id to the user's list of friend_ids.
