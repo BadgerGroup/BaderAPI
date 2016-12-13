@@ -133,6 +133,9 @@ class SQLHelper < ActiveRecord::Migration
   def addFriend(userId, friendId)
     user = User.find(userId)
     User.find(friendId)
+    if user.friends.exists?(friendId)
+      return {:error => "Users are already friends."}
+    end
     Friend.create(:user_id => userId, :friend_id => friendId)
     Friend.create(:user_id => friendId, :friend_id => userId)
     return {:response => "Success"}
@@ -161,7 +164,11 @@ class SQLHelper < ActiveRecord::Migration
     if args['id'] then
       badgeId = args['id']
       badge = Badge.find(badgeId)
+      puts "ARG: #{args['is_new']}"
       badge.update! args
+      if args['recipient_id'] then
+        badge.is_new = true
+      end
       return {:response => "Record updated."}
     else
       return {:error => "'id' is required."}

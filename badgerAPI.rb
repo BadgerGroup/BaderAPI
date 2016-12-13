@@ -2,8 +2,6 @@ require 'sinatra'
 require './SQLHelper'
 require 'json'
 
-URL = "http://badgerapi.e3rxnzanmm.us-west-2.elasticbeanstalk.com/"
-
 db = SQLHelper.new
 
 FileUtils.cp("public/index.html", "README.md")

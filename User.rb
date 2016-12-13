@@ -12,10 +12,21 @@ class User < ActiveRecord::Base
   validates :email, length: {minimum:3, maximum:320}, format: {with: /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i}
   validates :password_confirmation, presence: true
   
+  
+  
   # returns array representation of user
   def toArray
     groups = self.group_ids
     badges = self.badge_ids
+    pairs = self.friend_ids
+    received = self.receivedBadge_ids
+    friends = Array.new
+    i = 0
+    pairs.each do |pair|
+      friends[i] = pair.second
+      i = i + 1
+    end
+    
     {
       :id => self.id, 
       :username => self.username, 
@@ -23,9 +34,11 @@ class User < ActiveRecord::Base
       :group_ids => groups,
       :owned_groups => self.ownedGroup_ids,
       :badge_ids => badges,
-      :trophy_case => self.receivedBadge_ids,
-      :friend_ids => self.friend_ids
+      :trophy_case => received,
+      :friend_ids => friends
     }
   end
   
+  
+
 end

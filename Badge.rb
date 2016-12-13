@@ -8,15 +8,17 @@ class Badge < ActiveRecord::Base
   validates :badge_description, presence: true
   validates :author_id, presence: true
   
-  # returns array representation of user
+  # returns array representation of badge
   def toArray
+    puts "is_new: #{self.is_new}"
     {
       :id => self.id,
       :badge_name => self.badge_name, 
       :author_id => self.author.id, 
-      :recipient_id => self.recipient,
+      :recipient_id => self.recipient_id,
       :image_url => self.image_url, 
-      :badge_description => self.badge_description 
+      :badge_description => self.badge_description,
+      :is_new => self.is_new
     }
   end
   
