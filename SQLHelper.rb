@@ -5,16 +5,15 @@ require_relative 'Group'
 require_relative 'Badge'
 require_relative 'Friend'
 
+# class that handles all I/O for database.
 class SQLHelper < ActiveRecord::Migration
 
 	SQLUsername = 'badgeradmin'
-	
-	#file = File.open("DBPASSWORD.TXT", "rb")
-	#SQLPassword = file.read
 	SQLPassword = 'AppBadger1!'
 	
 	HARD_ERR = {:error => "There was a problem with the API."}
 	
+	# connect to the SQL database
 	def initialize
 		ActiveRecord::Base.establish_connection(
 			:adapter  => "mysql2",
@@ -31,7 +30,7 @@ class SQLHelper < ActiveRecord::Migration
       f.puts exception
       f.puts exception.backtrace
     end
-    return {:error => "A problem has occured with the API."}
+    return HARD_ERR
 	end
 	
 	def getFirstUser
@@ -53,6 +52,7 @@ class SQLHelper < ActiveRecord::Migration
 		end
 	end
 	
+	# return user info given a username
 	def getUserByUsername(name)
 	  begin
 	    user = User.find_by username: name
@@ -64,6 +64,7 @@ class SQLHelper < ActiveRecord::Migration
 	  end
 	end
 	
+	# find and authenticate the user with the given credentials
 	def login(name, password)
 	  user = User.find_by username: name
 	  if user.nil?
@@ -90,6 +91,7 @@ class SQLHelper < ActiveRecord::Migration
     end
   end
   
+	# permanently delete a user from the database
   def deleteUser(id) 
     user = User.find(id)
   rescue ActiveRecord::RecordNotFound
@@ -98,10 +100,11 @@ class SQLHelper < ActiveRecord::Migration
     self.fatalError e
     HARD_ERR
   else
-    user.destroy
+    user.destroy # `destroy` checks for dependencies (badges, groups)
     return {:response => "User with id #{id} deleted."}
   end
   
+	# get the badge object with the given id
   def getBadgeById(id)
     begin
       badge = Badge.find(id)
@@ -115,6 +118,7 @@ class SQLHelper < ActiveRecord::Migration
     end
   end
 	
+	# create a new user with the given credentials
 	def createUser(name, password, passwordConfirmation, email)
 		begin
 		user = User.create!(:username => name, :password => password, :email => email, :password_confirmation => passwordConfirmation) #throws exception if invalid
@@ -130,6 +134,7 @@ class SQLHelper < ActiveRecord::Migration
 		end
 	end
 	
+	# add a friend to the given user, also adds in reverse direction
   def addFriend(userId, friendId)
     user = User.find(userId)
     User.find(friendId)
@@ -143,7 +148,7 @@ class SQLHelper < ActiveRecord::Migration
     rescue ActiveRecord::RecordNotFound
       return {:error => "User and/or friend not found."}
   end	
-	
+	# update user with given credentials
 	def updateUser(args)
 	  if args['id'] then
 	    userId = args['id']
@@ -180,6 +185,7 @@ class SQLHelper < ActiveRecord::Migration
       HARD_ERR
   end
 	
+	    # create a new group
 	def createGroup(name, description, adminId)
 	  group = Group.create(:group_name => name, :group_description => description, :admin_id => adminId)
 	rescue ActiveRecord::RecordInvalid => ri
@@ -191,6 +197,7 @@ class SQLHelper < ActiveRecord::Migration
 	  group.toArray
 	end
 	
+	    # create a new badge with given properties
 	def createBadge(imageURL, name, description, authorId)
 	  user = User.find(authorId)
 	  badge = Badge.create(:image_url => imageURL, :badge_name => name, :badge_description => description, :author_id => user.id)
@@ -203,6 +210,7 @@ class SQLHelper < ActiveRecord::Migration
 	  badge.toArray
 	end
 	
+	    # adds a user to the given group
 	def addUserToGroup(userId, groupId)
 	  user = User.find(userId)
 	  group = Group.find(groupId)
@@ -219,6 +227,7 @@ class SQLHelper < ActiveRecord::Migration
 	  return {:response => 'User added to group.', :user_id => userId, :group_id => groupId}
 	end
 	
+	    # removes a given user from a given group
 	def removeUserFromGroup(userId, groupId)
 	  user = User.find(userId)
 	  group = Group.find(groupId)
