@@ -13,7 +13,7 @@ class Group < ActiveRecord::Base
       :admin_id => self.admin.id,
       :group_name => self.group_name, 
       :group_description => self.group_description, 
-      :user_ids => users
+      :user_ids => users # members, including admin 
     }
   end
   
