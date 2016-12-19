@@ -1,4 +1,4 @@
-require 'active_record'
+require 'active_record' # for managing model objects
 
 require_relative 'User'
 require_relative 'Group'
