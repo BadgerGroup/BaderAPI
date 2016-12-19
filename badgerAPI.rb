@@ -13,6 +13,7 @@ before do
   content_type 'application/json'
 end
 
+# retrieve JSON arguments for every POST request
 post '*' do
   request.body.rewind
   @args = JSON.parse request.body.read
