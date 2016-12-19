@@ -2,9 +2,12 @@ require 'sinatra'
 require './SQLHelper'
 require 'json'
 
+# Entry point for Badger RESTful API. When executed, this file starts a web application
+# that listens for requests on the following endpoints.
+
 db = SQLHelper.new
 
-FileUtils.cp("public/index.html", "README.md")
+FileUtils.cp("public/index.html", "README.md") # update the homepage with the README documentation
 
 before do
   content_type 'application/json'
