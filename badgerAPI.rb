@@ -16,6 +16,7 @@ post '*' do
   pass
 end
 
+# show the documentation on home page
 get '/' do
   redirect '/index.html'
 end
@@ -34,6 +35,7 @@ get '/readUser' do
 	JSON.generate response
 end
 
+# authenticate the user's session
 post '/login' do
   username = @args['username']
   password = @args['password']
@@ -42,6 +44,7 @@ post '/login' do
   JSON.generate response
 end
 
+# create a new user
 post '/createUser' do
   username = @args['username']
   password = @args['password']
@@ -52,12 +55,14 @@ post '/createUser' do
   JSON.generate response
 end
 
+# permanently delete a user's account
 post '/deleteUser' do
   id = @args['id'];
   response = db.deleteUser id
   JSON.generate response
 end
 
+# adds a friend to a user's friends list, and the user to the friend's friends list.
 post '/addFriend' do
   userId = @args['user_id']
   friendId = @args['friend_id']
@@ -65,6 +70,7 @@ post '/addFriend' do
   JSON.generate response
 end
 
+# create a new badge
 post '/createBadge' do
   imageURL = @args['image_url']
   badgeName = @args['badge_name']
@@ -75,16 +81,19 @@ post '/createBadge' do
   JSON.generate response
 end
 
+# updates a user with the given properties
 post '/updateUser' do
   response = db.updateUser(@args)
   JSON.generate response
 end
 
+# updates a badge with the given properties
 post '/updateBadge' do
   response = db.updateBadge(@args)
   JSON.generate response
 end
 
+# adds a non-admin user to a group
 post '/addUserToGroup' do
   userId = @args['user_id']
   groupId = @args['group_id']
@@ -93,11 +102,13 @@ post '/addUserToGroup' do
   JSON.generate response
 end
 
+# remove a user from a group
 post '/removeUserFromGroup' do
   response = db.removeUserFromGroup(@args['user_id'], @args['group_id'])
   JSON.generate response
 end
 
+# create a new group
 post '/createGroup' do
   name = @args['group_name']
   desc = @args['group_description']
@@ -107,11 +118,13 @@ post '/createGroup' do
   JSON.generate response
 end
 
+# get group details
 get '/readGroup' do
   response = db.getGroupById params['id']
   JSON.generate response
 end
 
+# get badge details
 get '/readBadge' do
   response = db.getBadgeById params['id']
   JSON.generate response
